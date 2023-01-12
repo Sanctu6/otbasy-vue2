@@ -61,11 +61,11 @@
         </tr>
         <tr>
           <td class="tg-field">сумма</td>
-          <td class="tg">{{ summ }}</td>
-          <td class="tg">{{ summ }}</td>
-          <td class="tg">{{ summ }}</td>
-          <td class="tg">{{ summ }}</td>
-          <td class="tg">{{ summ }}</td>
+          <td class="tg">{{ new Intl.NumberFormat().format(summ) }} т</td>
+          <td class="tg">{{ new Intl.NumberFormat().format(summ) }} т</td>
+          <td class="tg">{{ new Intl.NumberFormat().format(summ) }} т</td>
+          <td class="tg">{{ new Intl.NumberFormat().format(summ) }} т</td>
+          <td class="tg">{{ new Intl.NumberFormat().format(summ) }} т</td>
         </tr>
         <tr>
           <td class="tg-field">общий</td>
