@@ -1,199 +1,229 @@
 <template>
   <v-container>
-    <v-label>Выбирете займ</v-label>
-    <v-container>
-      <v-row>
-        <v-col cols="4">
-          <v-select v-model="selectedProgram" :items="programs" label="Программа:" item-text="name" item-value="id"
-            dense></v-select></v-col><v-col cols="4">
-          <v-text-field v-model="summ" label="Сумма займа:" type="number" dense></v-text-field></v-col><v-col cols="4">
-          <v-label>Ежемес. платеж:</v-label>
-          <v-slider v-model="monthlyPay" track-color="grey" color="green" always-dirty min="10000" :max="summ"
-            step="10000" dense>
-            <template v-slot:prepend>
-              <v-icon @click="decrement"> mdi-minus </v-icon>
-            </template>
+    <v-row>
+      <v-col cols="4">
+        <v-select
+          v-model="selectedProgram"
+          :items="programs"
+          label="Программа:"
+          item-text="name"
+          item-value="id"
+          dense
+        ></v-select></v-col
+      ><v-col cols="4">
+        <v-text-field
+        class="inputSumm"
+          v-model="summ"
+          label="Сумма займа:"
+          type="number"
+          dense
+        ></v-text-field></v-col
+      ><v-col cols="4">
+        <v-label>Ежемес. платеж:</v-label>
+        <v-slider
+          v-model="monthlyPay"
+          track-color="grey"
+          color="green"
+          always-dirty
+          min="10000"
+          :max="summ"
+          step="10000"
+          dense
+        >
+          <template v-slot:prepend>
+            <v-icon @click="decrement"> mdi-minus </v-icon>
+          </template>
 
-            <template v-slot:append>
-              <v-icon @click="increment"> mdi-plus </v-icon>
-            </template>
-          </v-slider>
-        </v-col>
-      </v-row></v-container>
+          <template v-slot:append>
+            <v-icon @click="increment"> mdi-plus </v-icon>
+          </template>
+        </v-slider>
+      </v-col>
+    </v-row>
     <table class="tg">
       <thead>
         <tr>
-          <th class="tg-baqh">Вид займа</th>
-          <th class="tg-baqh" v-for="loan in loans" :key="loan.id">
+          <th class="tg-header">Вид займа</th>
+          <th class="tg-header" v-for="loan in loans" :key="loan.id">
             {{ loan.name }}
           </th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td class="tg-baqh" colspan="6">Общие сведения</td>
+          <td class="tg-merge" colspan="6">Общие сведения</td>
         </tr>
         <tr>
-          <td class="tg-baqh">Договорная сумма</td>
-          <th class="tg-baqh" v-for="loan in loans" :key="loan.id">
+          <td class="tg-field">Договорная сумма</td>
+          <th class="tg" v-for="loan in loans" :key="loan.id">
             {{ loan.contractSum }}
           </th>
         </tr>
         <tr>
-          <td class="tg-baqh">сумма</td>
-          <td class="tg-baqh">{{ summ }}</td>
-          <td class="tg-baqh">{{ summ }}</td>
-          <td class="tg-baqh">{{ summ }}</td>
-          <td class="tg-baqh">{{ summ }}</td>
-          <td class="tg-baqh">{{ summ }}</td>
+          <td class="tg-field">сумма</td>
+          <td class="tg">{{ summ }}</td>
+          <td class="tg">{{ summ }}</td>
+          <td class="tg">{{ summ }}</td>
+          <td class="tg">{{ summ }}</td>
+          <td class="tg">{{ summ }}</td>
         </tr>
         <tr>
-          <td class="tg-baqh">общий</td>
-          <td class="tg-baqh"></td>
-          <td class="tg-baqh"></td>
-          <td class="tg-baqh"></td>
-          <td class="tg-baqh"></td>
-          <td class="tg-baqh"></td>
+          <td class="tg-field">общий</td>
+          <td class="tg"></td>
+          <td class="tg"></td>
+          <td class="tg"></td>
+          <td class="tg"></td>
+          <td class="tg"></td>
         </tr>
         <tr>
-          <td class="tg-baqh">Ежемеся</td>
-          <td class="tg-baqh">{{ monthlyPay }}</td>
-          <td class="tg-baqh">{{ monthlyPay }}</td>
-          <td class="tg-baqh">{{ monthlyPay }}</td>
-          <td class="tg-baqh">{{ monthlyPay }}</td>
-          <td class="tg-baqh">{{ monthlyPay }}</td>
+          <td class="tg-field">Ежемеся</td>
+          <td class="tg">{{ monthlyPay }}</td>
+          <td class="tg">{{ monthlyPay }}</td>
+          <td class="tg">{{ monthlyPay }}</td>
+          <td class="tg">{{ monthlyPay }}</td>
+          <td class="tg">{{ monthlyPay }}</td>
         </tr>
         <tr>
-          <td class="tg-baqh">переплата</td>
-          <td class="tg-baqh"></td>
-          <td class="tg-baqh"></td>
-          <td class="tg-baqh"></td>
-          <td class="tg-baqh"></td>
-          <td class="tg-baqh"></td>
+          <td class="tg-field">переплата</td>
+          <td class="tg"></td>
+          <td class="tg"></td>
+          <td class="tg"></td>
+          <td class="tg"></td>
+          <td class="tg"></td>
         </tr>
         <tr>
-          <td class="tg-baqh" colspan="6">Начальные</td>
+          <td class="tg-merge" colspan="6">Начальные</td>
         </tr>
         <tr>
-          <td class="tg-baqh">ЧСД</td>
-          <td class="tg-baqh"></td>
-          <td class="tg-baqh"></td>
-          <td class="tg-baqh"></td>
-          <td class="tg-baqh"></td>
-          <td class="tg-baqh"></td>
+          <td class="tg-field">ЧСД</td>
+          <td class="tg"></td>
+          <td class="tg"></td>
+          <td class="tg"></td>
+          <td class="tg"></td>
+          <td class="tg"></td>
         </tr>
         <tr>
-          <td class="tg-baqh">Срок без</td>
-          <td class="tg-baqh"></td>
-          <td class="tg-baqh"></td>
-          <td class="tg-baqh"></td>
-          <td class="tg-baqh"></td>
-          <td class="tg-baqh"></td>
+          <td class="tg-field">Срок без</td>
+          <td class="tg"></td>
+          <td class="tg"></td>
+          <td class="tg"></td>
+          <td class="tg"></td>
+          <td class="tg"></td>
         </tr>
         <tr>
-          <td class="tg-baqh">Ежемеся</td>
-          <td class="tg-baqh"></td>
-          <td class="tg-baqh"></td>
-          <td class="tg-baqh"></td>
-          <td class="tg-baqh"></td>
-          <td class="tg-baqh"></td>
+          <td class="tg-field">Ежемеся</td>
+          <td class="tg"></td>
+          <td class="tg"></td>
+          <td class="tg"></td>
+          <td class="tg"></td>
+          <td class="tg"></td>
         </tr>
         <tr>
-          <td class="tg-baqh">Переход</td>
-          <td class="tg-baqh"></td>
-          <td class="tg-baqh"></td>
-          <td class="tg-baqh"></td>
-          <td class="tg-baqh"></td>
-          <td class="tg-baqh"></td>
+          <td class="tg-field">Переход</td>
+          <td class="tg"></td>
+          <td class="tg"></td>
+          <td class="tg"></td>
+          <td class="tg"></td>
+          <td class="tg"></td>
         </tr>
         <tr>
-          <td class="tg-baqh">Ставка</td>
-          <td class="tg-baqh"></td>
-          <td class="tg-baqh"></td>
-          <td class="tg-baqh"></td>
-          <td class="tg-baqh"></td>
-          <td class="tg-baqh"></td>
+          <td class="tg-field">Ставка</td>
+          <td class="tg"></td>
+          <td class="tg"></td>
+          <td class="tg"></td>
+          <td class="tg"></td>
+          <td class="tg"></td>
         </tr>
         <tr>
-          <td class="tg-baqh">Метод</td>
-          <td class="tg-baqh"></td>
-          <td class="tg-baqh"></td>
-          <td class="tg-baqh"></td>
-          <td class="tg-baqh"></td>
-          <td class="tg-baqh"></td>
+          <td class="tg-field">Метод</td>
+          <td class="tg"></td>
+          <td class="tg"></td>
+          <td class="tg"></td>
+          <td class="tg"></td>
+          <td class="tg"></td>
         </tr>
         <tr>
-          <td class="tg-baqh" colspan="6">Жилищный</td>
+          <td class="tg-merge" colspan="6">Жилищный</td>
         </tr>
         <tr>
-          <td class="tg-baqh">Срок жилищ</td>
-          <td class="tg-baqh"></td>
-          <td class="tg-baqh"></td>
-          <td class="tg-baqh"></td>
-          <td class="tg-baqh"></td>
-          <td class="tg-baqh"></td>
+          <td class="tg-field">Срок жилищ</td>
+          <td class="tg"></td>
+          <td class="tg"></td>
+          <td class="tg"></td>
+          <td class="tg"></td>
+          <td class="tg"></td>
         </tr>
         <tr>
-          <td class="tg-baqh">Ежемесячный</td>
-          <td class="tg-baqh"></td>
-          <td class="tg-baqh"></td>
-          <td class="tg-baqh"></td>
-          <td class="tg-baqh"></td>
-          <td class="tg-baqh"></td>
+          <td class="tg-field">Ежемесячный</td>
+          <td class="tg"></td>
+          <td class="tg"></td>
+          <td class="tg"></td>
+          <td class="tg"></td>
+          <td class="tg"></td>
         </tr>
         <tr>
-          <td class="tg-baqh">Ставка</td>
-          <td class="tg-baqh"></td>
-          <td class="tg-baqh"></td>
-          <td class="tg-baqh"></td>
-          <td class="tg-baqh"></td>
-          <td class="tg-baqh"></td>
+          <td class="tg-field">Ставка</td>
+          <td class="tg"></td>
+          <td class="tg"></td>
+          <td class="tg"></td>
+          <td class="tg"></td>
+          <td class="tg"></td>
         </tr>
         <tr>
-          <td class="tg-baqh">Метод</td>
-          <td class="tg-baqh">Аннуетет</td>
-          <td class="tg-baqh">Аннуетет</td>
-          <td class="tg-baqh">Аннуетет</td>
-          <td class="tg-baqh">Аннуетет</td>
-          <td class="tg-baqh">Аннуетет</td>
+          <td class="tg-field">Метод</td>
+          <td class="tg">Аннуетет</td>
+          <td class="tg">Аннуетет</td>
+          <td class="tg">Аннуетет</td>
+          <td class="tg">Аннуетет</td>
+          <td class="tg">Аннуетет</td>
         </tr>
         <tr>
-          <td class="tg-baqh" colspan="6">Дополнительно</td>
+          <td class="tg-merge" colspan="6">Дополнительно</td>
         </tr>
         <tr>
-          <td class="tg-baqh">Необходимо</td>
-          <td class="tg-baqh"></td>
-          <td class="tg-baqh"></td>
-          <td class="tg-baqh"></td>
-          <td class="tg-baqh"></td>
-          <td class="tg-baqh"></td>
+          <td class="tg-field">Необходимо</td>
+          <td class="tg"></td>
+          <td class="tg"></td>
+          <td class="tg"></td>
+          <td class="tg"></td>
+          <td class="tg"></td>
         </tr>
         <tr>
-          <td class="tg-baqh">Ориентировочные</td>
-          <td class="tg-baqh"></td>
-          <td class="tg-baqh"></td>
-          <td class="tg-baqh"></td>
-          <td class="tg-baqh"></td>
-          <td class="tg-baqh"></td>
+          <td class="tg-field">Ориентировочные</td>
+          <td class="tg"></td>
+          <td class="tg"></td>
+          <td class="tg"></td>
+          <td class="tg"></td>
+          <td class="tg"></td>
         </tr>
         <tr>
-          <td class="tg-baqh"></td>
-          <td class="tg-baqh">
-            <v-btn color="primary"><v-icon left>mdi-check-circle-outline</v-icon> Выбрать</v-btn>
+          <td class="tg-footer"></td>
+          <td class="tg-footer">
+            <v-btn color="primary" @click="sendToParent"
+              ><v-icon left>mdi-check-circle-outline</v-icon> Выбрать</v-btn
+            >
           </td>
-          <td class="tg-baqh">
-            <v-btn color="primary"><v-icon left>mdi-check-circle-outline</v-icon> Выбрать</v-btn>
+          <td class="tg-footer">
+            <v-btn color="primary"
+              ><v-icon left>mdi-check-circle-outline</v-icon> Выбрать</v-btn
+            >
           </td>
-          <td class="tg-baqh">
-            <v-btn color="primary"><v-icon left>mdi-check-circle-outline</v-icon> Выбрать</v-btn>
+          <td class="tg-footer">
+            <v-btn color="primary"
+              ><v-icon left>mdi-check-circle-outline</v-icon> Выбрать</v-btn
+            >
           </td>
-          <td class="tg-baqh">
-            <v-btn color="orange" disabled><v-icon left dark>mdi-close-circle-outline</v-icon> Не
-              доступен</v-btn>
+          <td class="tg-footer">
+            <v-btn color="orange" disabled
+              ><v-icon left dark>mdi-close-circle-outline</v-icon> Не
+              доступен</v-btn
+            >
           </td>
-          <td class="tg-baqh">
-            <v-btn color="orange" disabled><v-icon left dark>mdi-close-circle-outline</v-icon> Не
-              доступен</v-btn>
+          <td class="tg-footer">
+            <v-btn color="orange" disabled
+              ><v-icon left dark>mdi-close-circle-outline</v-icon> Не
+              доступен</v-btn
+            >
           </td>
         </tr>
       </tbody>
@@ -203,26 +233,29 @@
 <script>
 export default {
   name: "TransposeTable",
-  created() {
+  mounted() {
     console.log("Starting connection to WebSocket Server");
     this.connection = new WebSocket("ws://localhost:8081");
+    window.top.postMessage("GetSumm", "*");
+    var scope = this;
+    window.onmessage = function (e) {
+      // inside the iframe
+      if (e.data?.summ) {
+        console.log("child", e);
+        //alert("It childs works!");
 
-    //THAT WORKS
-    this.result = "Result of command";
-
-    this.connection.onmessage = (event) => {
-      console.log(event);
+        console.log("summ recived", e.data.summ);
+        scope.summ = e.data.summ;
+        console.log("scope.summ", scope.summ);
+      }
     };
-    this.connection.onopen = function (event) {
-      console.log(event);
-      console.log("Successfully connected to the echo websocket server...");
-    };
+    console.log("data", this);
   },
   data() {
     return {
       connection: null,
       summ: 20500000,
-      monthlyPay: 500000,
+      monthlyPay: 5000000,
       selectedProgram: "Втричное жилье",
       programs: ["Втричное жилье"],
       fields: [
@@ -263,40 +296,77 @@ export default {
     increment() {
       this.monthlyPay = this.monthlyPay + 10000;
     },
+    sendToParent() {
+      window.top.postMessage("hello world2", "*");
+    },
   },
 };
 </script>
 <style scoped>
+.inputSumm >>> input[type="number"] {
+  -moz-appearance: textfield;
+}
+.inputSumm >>> input::-webkit-outer-spin-button,
+.inputSumm >>> input::-webkit-inner-spin-button {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
 .tg {
   border-collapse: collapse;
+  border-color: #9abad9;
   border-spacing: 0;
 }
-
 .tg td {
-  border-color: rgb(0, 0, 0);
+  background-color: #ffffff;
+  border-color: #9abad9;
   border-style: solid;
   border-width: 1px;
+  color: #444;
   font-family: Arial, sans-serif;
   font-size: 14px;
   overflow: hidden;
   padding: 5px 5px;
   word-break: normal;
+  text-align: center;
 }
-
 .tg th {
-  border-color: rgb(0, 0, 0);
+  background-color: #ffffff;
+  border-color: #9abad9;
   border-style: solid;
   border-width: 1px;
+  color: rgb(0, 0, 0);
   font-family: Arial, sans-serif;
   font-size: 14px;
   font-weight: normal;
   overflow: hidden;
   padding: 5px 5px;
   word-break: normal;
-}
-
-.tg .tg-baqh {
   text-align: center;
-  vertical-align: top;
+}
+.tg .tg-merge {
+  background-color: #368de0;
+  color: #ffffff;
+  font-weight: bold;
+  text-align: center;
+  vertical-align: middle;
+}
+.tg .tg-field {
+  background-color: #ffffff;
+  font-weight: bold;
+  text-align: center;
+  vertical-align: middle;
+}
+.tg .tg-header {
+  background-color: #475786;
+  font-weight: bold;
+  color: #ffffff;
+  text-align: center;
+  vertical-align: middle;
+}
+.tg .tg-footer {
+  background-color: #efefef;
+  text-align: center;
+  vertical-align: middle;
 }
 </style>  
