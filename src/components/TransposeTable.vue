@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container style="max-width: 100%">
     <v-row>
       <v-col cols="4">
         <v-select
@@ -8,15 +8,13 @@
           label="Программа:"
           item-text="name"
           item-value="id"
-          dense
         ></v-select></v-col
       ><v-col cols="4">
         <v-text-field
-        class="inputSumm"
+          class="inputSumm"
           v-model="summ"
           label="Сумма займа:"
           type="number"
-          dense
         ></v-text-field></v-col
       ><v-col cols="4">
         <v-label>Ежемес. платеж:</v-label>
@@ -28,7 +26,6 @@
           min="10000"
           :max="summ"
           step="10000"
-          dense
         >
           <template v-slot:prepend>
             <v-icon @click="decrement"> mdi-minus </v-icon>
@@ -43,7 +40,7 @@
     <table class="tg">
       <thead>
         <tr>
-          <th class="tg-header">Вид займа</th>
+          <th class="tg-header">Вид заема</th>
           <th class="tg-header" v-for="loan in loans" :key="loan.id">
             {{ loan.name }}
           </th>
@@ -56,11 +53,11 @@
         <tr>
           <td class="tg-field">Договорная сумма</td>
           <th class="tg" v-for="loan in loans" :key="loan.id">
-            {{ loan.contractSum }}
+            {{ new Intl.NumberFormat().format(loan.contractSum) }} т
           </th>
         </tr>
         <tr>
-          <td class="tg-field">сумма</td>
+          <td class="tg-field">Сумма заема</td>
           <td class="tg">{{ new Intl.NumberFormat().format(summ) }} т</td>
           <td class="tg">{{ new Intl.NumberFormat().format(summ) }} т</td>
           <td class="tg">{{ new Intl.NumberFormat().format(summ) }} т</td>
@@ -68,133 +65,109 @@
           <td class="tg">{{ new Intl.NumberFormat().format(summ) }} т</td>
         </tr>
         <tr>
-          <td class="tg-field">общий</td>
-          <td class="tg"></td>
+          <td class="tg-field">Общий срок кредитования</td>
+          <td class="tg" v-for="loan in loans" :key="loan.id">
+            {{ loan.fullPeriod }}
+          </td>
+        </tr>
+        <tr>
+          <td class="tg-field">Ежемесячный платеж не более</td>
+          <td class="tg" v-for="loan in loans" :key="loan.id">
+            {{ monthlyPay * loan.monthlyPayNoOver }}
+          </td>
+        </tr>
+        <tr>
+          <td class="tg-field">Переплата</td>
+          <td class="tg" v-for="loan in loans" :key="loan.id">
+            {{ summ * loan.overPay }}
+          </td>
+        </tr>
+        <tr>
+          <td class="tg-merge" colspan="6">Начальные параметры</td>
+        </tr>
+        <tr>
+          <td class="tg-field">ЧСД| ОД</td>
+          <td class="tg-field" v-for="loan in loans" :key="loan.id">
+            {{ loan.chsdOd }}
+          </td>
+        </tr>
+        <tr>
+          <td class="tg-field">Срок без перехода на Жилзайм</td>
+          <td class="tg" v-for="loan in loans" :key="loan.id">
+            {{ loan.strokBez }}
+          </td>
+        </tr>
+        <tr>
+          <td class="tg-field">Ежемесячный платеж</td>
+          <td class="tg-field" v-for="loan in loans" :key="loan.id">
+            {{ monthlyPay * loan.monthlyPayNoOver }}
+          </td>
+        </tr>
+        <tr>
+          <td class="tg-field">Переход на Жилзайм (мин. ОП)</td>
+          <td class="tg-field" v-for="loan in loans" :key="loan.id">
+            {{ loan.perehod }}
+          </td>
+        </tr>
+        <tr>
+          <td class="tg-field">Ставка вознаграждения</td>
+          <td class="tg-field">11.50%</td>
           <td class="tg"></td>
           <td class="tg"></td>
           <td class="tg"></td>
           <td class="tg"></td>
         </tr>
         <tr>
-          <td class="tg-field">Ежемеся</td>
-          <td class="tg">{{ monthlyPay }}</td>
-          <td class="tg">{{ monthlyPay }}</td>
-          <td class="tg">{{ monthlyPay }}</td>
-          <td class="tg">{{ monthlyPay }}</td>
-          <td class="tg">{{ monthlyPay }}</td>
-        </tr>
-        <tr>
-          <td class="tg-field">переплата</td>
-          <td class="tg"></td>
+          <td class="tg-field">Метод погашения</td>
+          <td class="tg">Погашение % без ОД</td>
           <td class="tg"></td>
           <td class="tg"></td>
           <td class="tg"></td>
           <td class="tg"></td>
         </tr>
         <tr>
-          <td class="tg-merge" colspan="6">Начальные</td>
+          <td class="tg-merge" colspan="6">Жилищный заем</td>
         </tr>
         <tr>
-          <td class="tg-field">ЧСД</td>
-          <td class="tg"></td>
-          <td class="tg"></td>
-          <td class="tg"></td>
-          <td class="tg"></td>
-          <td class="tg"></td>
+          <td class="tg-field">Срок жилищного заема</td>
+          <td class="tg-field" v-for="loan in loans" :key="loan.id">
+          {{ loan.strokZaema }} мес.</td>
         </tr>
         <tr>
-          <td class="tg-field">Срок без</td>
-          <td class="tg"></td>
-          <td class="tg"></td>
-          <td class="tg"></td>
-          <td class="tg"></td>
-          <td class="tg"></td>
+          <td class="tg-field">Ежемесячный платеж</td>
+          <td class="tg" v-for="loan in loans" :key="loan.id">
+          {{ new Intl.NumberFormat().format(monthlyPay) }} т</td>
         </tr>
         <tr>
-          <td class="tg-field">Ежемеся</td>
-          <td class="tg"></td>
-          <td class="tg"></td>
-          <td class="tg"></td>
-          <td class="tg"></td>
-          <td class="tg"></td>
+          <td class="tg-field">Ставка вознаграждения</td>
+          <td class="tg" v-for="loan in loans" :key="loan.id">
+          {{ loan.stavka }}.00%</td>
         </tr>
         <tr>
-          <td class="tg-field">Переход</td>
-          <td class="tg"></td>
-          <td class="tg"></td>
-          <td class="tg"></td>
-          <td class="tg"></td>
-          <td class="tg"></td>
-        </tr>
-        <tr>
-          <td class="tg-field">Ставка</td>
-          <td class="tg"></td>
-          <td class="tg"></td>
-          <td class="tg"></td>
-          <td class="tg"></td>
-          <td class="tg"></td>
-        </tr>
-        <tr>
-          <td class="tg-field">Метод</td>
-          <td class="tg"></td>
-          <td class="tg"></td>
-          <td class="tg"></td>
-          <td class="tg"></td>
-          <td class="tg"></td>
-        </tr>
-        <tr>
-          <td class="tg-merge" colspan="6">Жилищный</td>
-        </tr>
-        <tr>
-          <td class="tg-field">Срок жилищ</td>
-          <td class="tg"></td>
-          <td class="tg"></td>
-          <td class="tg"></td>
-          <td class="tg"></td>
-          <td class="tg"></td>
-        </tr>
-        <tr>
-          <td class="tg-field">Ежемесячный</td>
-          <td class="tg"></td>
-          <td class="tg"></td>
-          <td class="tg"></td>
-          <td class="tg"></td>
-          <td class="tg"></td>
-        </tr>
-        <tr>
-          <td class="tg-field">Ставка</td>
-          <td class="tg"></td>
-          <td class="tg"></td>
-          <td class="tg"></td>
-          <td class="tg"></td>
-          <td class="tg"></td>
-        </tr>
-        <tr>
-          <td class="tg-field">Метод</td>
-          <td class="tg">Аннуетет</td>
-          <td class="tg">Аннуетет</td>
-          <td class="tg">Аннуетет</td>
-          <td class="tg">Аннуетет</td>
-          <td class="tg">Аннуетет</td>
+          <td class="tg-field">Метод погашения</td>
+          <td class="tg-field" style="color:green">Аннуетет</td>
+          <td class="tg-field" style="color:green">Аннуетет</td>
+          <td class="tg-field" style="color:green">Аннуетет</td>
+          <td class="tg-field" style="color:green">Аннуетет</td>
+          <td class="tg-field" style="color:green">Аннуетет</td>
         </tr>
         <tr>
           <td class="tg-merge" colspan="6">Дополнительно</td>
         </tr>
         <tr>
-          <td class="tg-field">Необходимо</td>
-          <td class="tg"></td>
-          <td class="tg"></td>
-          <td class="tg"></td>
-          <td class="tg"></td>
-          <td class="tg"></td>
+          <td class="tg-field">Необходимо доложить</td>
+          <td class="tg">0.00 т</td>
+          <td class="tg">0.00 т</td>
+          <td class="tg">0.00 т</td>
+          <td class="tg">0.00 т</td>
+          <td class="tg">0.00 т</td>
         </tr>
         <tr>
-          <td class="tg-field">Ориентировочные</td>
-          <td class="tg"></td>
-          <td class="tg"></td>
-          <td class="tg"></td>
-          <td class="tg"></td>
-          <td class="tg"></td>
+          <td class="tg-field">
+            Ориентировочные накопления в период обеспечения вкладом
+          </td>
+          <td class="tg" v-for="loan in loans" :key="loan.id">
+          {{ summ*loan.orient }} т</td>
         </tr>
         <tr>
           <td class="tg-footer"></td>
@@ -258,34 +231,77 @@ export default {
       monthlyPay: 5000000,
       selectedProgram: "Втричное жилье",
       programs: ["Втричное жилье"],
-      fields: [
-        { id: 11, name: "test fields 11" },
-        { id: 12, name: "test fields 12" },
-        { id: 13, name: "test fields 13" },
-        { id: 14, name: "test fields 14" },
-        { id: 15, name: "test fields 15" },
-        { id: 16, name: "test fields 16" },
-        { id: 17, name: "test fields 17" },
-        { id: 18, name: "test fields 18" },
-      ],
       loans: [
         {
           id: 1,
-          name: 'Пром. жилищный заем "Жекіл"',
-          contractSum: "2050000.00 т",
+          name: 'Пром. жилищный заем "Жеціл"',
+          contractSum: 20500000,
+          fullPeriod: "6 лет 6 мес.",
+          monthlyPayNoOver: 1.1,
+          overPay: 0.1,
+          chsdOd: "251 791.67 т |39/80",
+          strokBez: "108 мес.",
+          perehod: "19 мес. (16 ОП)",
+          strokZaema: 59,
+          stavka: 5,
+          orient: 0.15,
         },
         {
           id: 2,
-          name: 'Пром. жилищный заем "Жекіл-2"',
-          contractSum: "2050000.00 т",
+          name: 'Пром. жилищный заем "Жеціл-2"',
+          contractSum: 20500000,
+          fullPeriod: "6 лет 6 мес.",
+          monthlyPayNoOver: 1.1,
+          overPay: 0.2,
+          chsdOd: "251 791.67 т |39/80",
+          strokBez: "108 мес.",
+          perehod: "19 мес. (16 ОП)",
+          strokZaema: 59,
+          stavka: 5,
+          orient: 0.15,
         },
         {
           id: 3,
           name: "Промежуточный жилищный заем",
-          contractSum: "2050000.00 т",
+          contractSum: 20500000,
+          fullPeriod: "6 лет 6 мес.",
+          monthlyPayNoOver: 1.1,
+          overPay: 0.2,
+          chsdOd: "251 791.67 т |39/80",
+          strokBez: "108 мес.",
+          perehod: "19 мес. (16 ОП)",
+          strokZaema: 59,
+          stavka: 5,
+          orient: 0.15,
         },
-        { id: 4, name: "Предварительный жилищный заем", contractSum: "0.00 т" },
-        { id: 5, name: "Жилищный заем", contractSum: "2050000.00 т" },
+        {
+          id: 4,
+          name: "Предварительный жилищный заем",
+          contractSum: 0,
+          fullPeriod: "6 лет 6 мес.",
+          monthlyPayNoOver: 1.1,
+          overPay: 0.2,
+          chsdOd: "251 791.67 т |39/80",
+          strokBez: "108 мес.",
+          perehod: "19 мес. (16 ОП)",
+          strokZaema: 59,
+          stavka: 5,
+          orient: 0.15,
+        },
+        {
+          id: 5,
+          name: "Жилищный заем",
+          contractSum: 20500000,
+          fullPeriod: "6 лет 6 мес.",
+          monthlyPayNoOver: 1.1,
+          overPay: 0.2,
+          chsdOd: "251 791.67 т |39/80",
+          strokBez: "108 мес.",
+          perehod: "19 мес. (16 ОП)",
+          strokZaema: 59,
+          stavka: 5,
+          orient: 0.15,
+        },
       ],
     };
   },
@@ -316,6 +332,11 @@ export default {
   border-collapse: collapse;
   border-color: #9abad9;
   border-spacing: 0;
+  font-family: Arial, sans-serif;
+  font-size: 11px;
+  text-align: center;
+  padding: 5px 5px;
+  vertical-align: middle;
 }
 .tg td {
   background-color: #ffffff;
@@ -323,12 +344,8 @@ export default {
   border-style: solid;
   border-width: 1px;
   color: #444;
-  font-family: Arial, sans-serif;
-  font-size: 14px;
   overflow: hidden;
-  padding: 5px 5px;
   word-break: normal;
-  text-align: center;
 }
 .tg th {
   background-color: #ffffff;
@@ -336,37 +353,27 @@ export default {
   border-style: solid;
   border-width: 1px;
   color: rgb(0, 0, 0);
-  font-family: Arial, sans-serif;
-  font-size: 14px;
   font-weight: normal;
   overflow: hidden;
   padding: 5px 5px;
-  word-break: normal;
-  text-align: center;
 }
 .tg .tg-merge {
+  text-transform: uppercase;
+  letter-spacing: 0.2rem;
   background-color: #368de0;
   color: #ffffff;
   font-weight: bold;
-  text-align: center;
-  vertical-align: middle;
 }
 .tg .tg-field {
   background-color: #ffffff;
   font-weight: bold;
-  text-align: center;
-  vertical-align: middle;
 }
 .tg .tg-header {
   background-color: #475786;
   font-weight: bold;
   color: #ffffff;
-  text-align: center;
-  vertical-align: middle;
 }
 .tg .tg-footer {
   background-color: #efefef;
-  text-align: center;
-  vertical-align: middle;
 }
 </style>  
